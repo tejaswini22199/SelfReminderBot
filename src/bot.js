@@ -1,6 +1,9 @@
 require("dotenv").config();
-const {Client,WebhookClient}=require('discord.js')
+
+
+const {Client,WebhookClient,MessageAttachment }=require('discord.js')
 const client=new Client();
+
 const webhookClient = new WebhookClient(
     process.env.WEBHOOK_ID,
     process.env.WEBHOOK_TOKEN,
@@ -10,12 +13,21 @@ client.login(process.env.DISCORD_BOT_TOKEN)
 client.on('ready',()=>{
     console.log(`${client.user.username} Hello I'm your self Care reminder Bot`);
 })
+const Responses = [
+    './src/images/download.png',
+    './src/images/download.jfif',
+    './src/images/download2.jfif',
+    './src/images/download3.jfif',
+    './src/images/images4.jfif',
+    './src/images/images5.jfif',
+    './src/images/images6.png',
+    './src/images/images7.png',
+];
 const listofTasks={
 
 }
 
 ;
-
 const tasks=["water your plants","Go call your old friend and talk to them","Create a drawing of your best friend","Watch Your favourite series","Dance your heart out","sing a song"];
 client.on('message', async (message)=>{
     //  console.log(message.content);
@@ -67,5 +79,11 @@ client.on('message', async (message)=>{
       {
           message.reply(listofTasks[message.author.id][i]);
       }
+    }
+    else if(message.content.startsWith('Yoga')){
+        const number=Math.floor(Math.random()*7);
+        const attachment = new MessageAttachment(Responses[number]);
+        // Send the attachment in the message channel
+        message.channel.send(attachment);
     }
 })
