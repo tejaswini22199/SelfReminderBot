@@ -16,11 +16,7 @@ client.on('ready',()=>{
 })
 const Responses = [
     './src/images/download.png',
-    './src/images/download.jfif',
-    './src/images/download2.jfif',
-    './src/images/download3.jfif',
-    './src/images/images4.jfif',
-    './src/images/images5.jfif',
+  
     './src/images/images6.png',
     './src/images/images7.png',
 ];
