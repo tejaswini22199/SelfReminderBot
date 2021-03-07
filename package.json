@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- 
   "scripts": {
     "start": "node ./src/bot.js",
     "dev": "nodemon ./src/bot.js"
@@ -13,7 +12,9 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
+    "querystring": "^0.2.1",
     "sequelize-cockroachdb": "^6.0.0-alpha.0"
   }
 }

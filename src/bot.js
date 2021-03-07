@@ -1,13 +1,14 @@
 require("dotenv").config();
+const querystring = require('querystring');
 
-
-const {Client,WebhookClient,MessageAttachment }=require('discord.js')
+const {Client,WebhookClient,MessageAttachment ,MessageEmbed,trim}=require('discord.js')
 const client=new Client();
-
+const fetch = require('node-fetch');
 const webhookClient = new WebhookClient(
     process.env.WEBHOOK_ID,
     process.env.WEBHOOK_TOKEN,
   );
+const url=`https://discordapp.com/api/webhooks/${process.env.WEBHOOK_ID}/${process.env.WEBHOOK_TOKEN}`;
 client.login(process.env.DISCORD_BOT_TOKEN)
 
 client.on('ready',()=>{
@@ -86,4 +87,69 @@ client.on('message', async (message)=>{
         // Send the attachment in the message channel
         message.channel.send(attachment);
     }
-})
+    else if(message.content.startsWith('Game')){
+   const gamemsg="White House Lilly Super Women Doremon";
+        message.reply("White House Lilly Super Women Doremon")
+  .then(msg => msg.delete({timeout:5000}))
+  .catch(console.error);
+  client.addListener()
+ 
+  if(message.content.startsWith('Answer')){
+      if(message.content.substr(6)===gamemsg)
+      message.reply('You won');
+      else
+      message.reply('Better Luck Next Time');
+  }
+    }
+    else if(message.content.startsWith('Show Instructions')){
+        const msg = {
+            "content": "To remind you , For any Contest: The command is: remindContest `Contestname` `ContestLink` `ContestTime`\n To get Any Fun task: The command is: Funtask\n List of all your reminders: List \nList a Random Yoga Posture: Yoga"
+        }
+        
+        fetch(url + "?wait=true", 
+        {"method":"POST", 
+        "headers": {"content-type": "application/json"},
+        "body": JSON.stringify(msg)})
+        .then(a=> a.json()).then(console.log)
+    }
+    else if(message.content.startsWith('doubts')){
+        const msg=message.content.substring(6);
+      
+	 
+        const args = message.content.slice().trim().split(/ +/);
+        const query = querystring.stringify({ term: args.join(' ')});
+  const { list } = await fetch(`https://api.urbandictionary.com/v0/define?${query}`).then(response => response.json());
+  if (!list.length) {
+	return message.channel.send(`No results found for **${args.join(' ')}**.`);
+}
+else
+return   message.channel.send(list[0].definition);
+    }
+    else if(message.content.startsWith('finance')){
+         const name=message.content.substr(7);
+        const url=  `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${name}&apikey=${process.env.Financial_Key}`;
+        var list;
+        fetch(url + "?wait=true")
+        .then(a=> a.json()).then(a=>
+            {
+                JSON.stringify(a);
+                const embed = new MessageEmbed()
+                .setColor('#EFFF00')
+                .setTitle(a["Symbol"])
+                .addFields(
+                    { name: 'AssetType', value: a["AssetType"]},
+                    { name: 'Name', value: a["Name"] },
+                    { name: 'Description', value: a["Description"].substr(0,1024)},
+                    { name:'Sector',value:a["Sector"]  }
+                );
+    message.channel.send(embed);
+            });
+            
+           
+
+      
+
+    //    return message.channel.send(list[0]);
+    }
+}
+)
