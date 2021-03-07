@@ -1,6 +1,7 @@
 require("dotenv").config();
 const querystring = require('querystring');
-
+// const Sequelize = require("sequelize-cockroachdb");
+const fs = require("fs");
 const {Client,WebhookClient,MessageAttachment ,MessageEmbed,trim}=require('discord.js')
 const client=new Client();
 const fetch = require('node-fetch');
@@ -10,7 +11,7 @@ const webhookClient = new WebhookClient(
   );
 const url=`https://discordapp.com/api/webhooks/${process.env.WEBHOOK_ID}/${process.env.WEBHOOK_TOKEN}`;
 client.login(process.env.DISCORD_BOT_TOKEN)
-
+const gamemsg="White House Lilly Super Women Doremon";
 client.on('ready',()=>{
     console.log(`${client.user.username} Hello I'm your self Care reminder Bot`);
 })
@@ -57,12 +58,10 @@ client.on('message', async (message)=>{
         timeDiff=(startTimeHours- currentHours)*60*60+(startTimeMinutes-currentMinutes)*60+(StartTimeSeconds-currentSeconds);
         console.log(timeDiff);
         client.setTimeout(function () {
-            // var content = msg.join();
+    
             msg.reply(`Hello You have your contest ${contestName} now . Please use this link ${contestLink}`)
          
-            // content = content.replaceAll(',', ' ');
-            // message.reply(content);
-            // console.log('Message sent to ' + message.author.id + ' at ' + Date.now().toString());
+            
         }, timeDiff*1000);
     }
     else if(message.content.startsWith('funTask')){
@@ -78,28 +77,22 @@ client.on('message', async (message)=>{
       }
     }
     else if(message.content.startsWith('Yoga')){
-        const number=Math.floor(Math.random()*7);
+        const number=Math.floor(Math.random()*3);
         const attachment = new MessageAttachment(Responses[number]);
         // Send the attachment in the message channel
         message.channel.send(attachment);
     }
     else if(message.content.startsWith('Game')){
-   const gamemsg="White House Lilly Super Women Doremon";
+  
         message.reply("White House Lilly Super Women Doremon")
-  .then(msg => msg.delete({timeout:5000}))
+  .then(msg => msg.delete({timeout:2000}))
   .catch(console.error);
-  client.addListener()
  
-  if(message.content.startsWith('Answer')){
-      if(message.content.substr(6)===gamemsg)
-      message.reply('You won');
-      else
-      message.reply('Better Luck Next Time');
-  }
+  
     }
     else if(message.content.startsWith('Show Instructions')){
         const msg = {
-            "content": "To remind you , For any Contest: The command is: remindContest `Contestname` `ContestLink` `ContestTime`\n To get Any Fun task: The command is: Funtask\n List of all your reminders: List \nList a Random Yoga Posture: Yoga"
+            "content": "To remind you , For any Contest: The command is: remindContest `Contestname` `ContestLink` `ContestTime`\n To get Any Fun task: The command is: `Funtask`  \n List of all your reminders: `List` \nList a Random Yoga Posture: `Yoga` \nGet Financial data about a company: `FinanceCompanyname` \nIt displays doubts of yours (data collected form urban dictionary):doubts `WORD` \nPlay Memory Game: `Game`"
         }
         
         fetch(url + "?wait=true", 
@@ -112,8 +105,8 @@ client.on('message', async (message)=>{
         const msg=message.content.substring(6);
       
 	 
-        const args = message.content.slice().trim().split(/ +/);
-        const query = querystring.stringify({ term: args.join(' ')});
+        // const args = msg.content.slice().trim().split(/ +/);
+        const query = querystring.stringify({ term: msg});
   const { list } = await fetch(`https://api.urbandictionary.com/v0/define?${query}`).then(response => response.json());
   if (!list.length) {
 	return message.channel.send(`No results found for **${args.join(' ')}**.`);
@@ -138,14 +131,22 @@ return   message.channel.send(list[0].definition);
                     { name: 'Description', value: a["Description"].substr(0,1024)},
                     { name:'Sector',value:a["Sector"]  }
                 );
+                
+              
+                  
     message.channel.send(embed);
             });
-            
-           
-
-      
-
-    //    return message.channel.send(list[0]);
+        
+    }
+    else if(message.content.startsWith('Answer')){
+        if(message.content.substr(6)===gamemsg)
+        message.reply('You won');
+        else
+        message.reply('Better Luck Next Time');
     }
 }
 )
+
+
+
+  

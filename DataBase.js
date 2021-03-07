@@ -1,7 +1,5 @@
 
-
-
-  const Sequelize = require("sequelize-cockroachdb");
+const Sequelize = require("sequelize-cockroachdb");
 const fs = require("fs");
 const { username, password } = require("./config.json");
 const { where } = require("sequelize-cockroachdb");
@@ -20,15 +18,6 @@ var sequelize = new Sequelize({
   logging: false,
 });
 
-// const Account = sequelize.define("accounts", {
-//   id: {
-//     type: Sequelize.INTEGER,
-//     primaryKey: true,
-//   },
-//   balance: {
-//     type: Sequelize.INTEGER,
-//   },
-// });
 const Tasks=sequelize.define("Tasks",{
   id: {
     type: Sequelize.INTEGER,
@@ -93,37 +82,57 @@ Tasks.sync({
   console.error("error: " + err.message);
   process.exit(1);
 });
+const FinanceData=sequelize.define("FinanceData",{
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+  },
+  name: {
+    type: Sequelize.STRING,
+  },
+  sector:{
+    type: Sequelize.STRING,
+  },
+  AssetType:{
+    type: Sequelize.STRING,
+  },
+  Description:{
+    type: Sequelize.STRING,
+  },
+})
+FinanceData.sync({
+  force:true,
+})
+.then(function () {
+  // Insert two rows into the "accounts" table.
+  return FinanceData.bulkCreate([
+    {
+      id: 1,
+      stringValue: "water your plants",
+      name:"IBM",
+      sector:"Sector",
+      AssetType:"AssetType",
+      Description: "Description",
+    },
+ 
+  ]);
+})
+.then(function () {
+  // Retrieve accounts.
+  
+  return FinanceData.findAll();
+ 
+})
+.then(function (tasks) {
+  // Print out the balances.
+  tasks.forEach(function (account) {
+    console.log(account.id + " " + account.name+" "+account.sector+" "+account.AssetType);
+  });
+  process.exit(0);
+})
+.catch(function (err) {
+  console.error("error: " + err.message);
+  process.exit(1);
+});
 
-
-
-// Account.sync({
-//   force: true,
-// })
-  // .then(function () {
-  //   // Insert two rows into the "accounts" table.
-  //   return Account.bulkCreate([
-  //     {
-  //       id: 1,
-  //       balance: 1000,
-  //     },
-  //     {
-  //       id: 2,
-  //       balance: 250,
-  //     },
-  //   ]);
-  // })
-  // .then(function () {
-  //   // Retrieve accounts.
-  //   return Account.findAll();
-  // })
-  // .then(function (accounts) {
-  //   // Print out the balances.
-  //   accounts.forEach(function (account) {
-  //     console.log(account.id + " " + account.balance);
-  //   });
-  //   process.exit(0);
-  // })
-  // .catch(function (err) {
-  //   console.error("error: " + err.message);
-  //   process.exit(1);
-  // });
+module.exports=FinanceData
